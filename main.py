@@ -19,6 +19,7 @@ def index():
 #
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
+    messages.clear()
     if request.method == 'POST':
         content = request.form['content']
         content = content.strip()
@@ -31,7 +32,6 @@ def create():
             flash('Content is required!')
         else:
             messages.append({'title': emaill, 'content': content})
-
             return redirect(url_for('index'))
 
     return render_template('create.html')

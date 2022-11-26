@@ -3,11 +3,25 @@ import requests
 
 from flask import Flask, render_template, request, url_for, flash, redirect
 
+
+'''email = input("Please enter your email: ")
+email = email.strip()
+email = email.lower()
+import requests
+response = ["https://2ip.ru/?area=ajaxHaveIBeenPwned&query=", "https://api.snusbase.com/combo/antipublic/"]
+response[0] = requests.get(f"{response[0]}"f"{email}")
+print(response[0])
+
+
+'''
+
+import json
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '7b09add526e0f9d38f575bca8c20a1fac116122d136b3d5d'
-messages = [
-            ]
-
+messages = []
+response = []
 @app.route("/mail")
 def hello():
     return "Hello World!"
@@ -23,15 +37,17 @@ def create():
     if request.method == 'POST':
         content = request.form['content']
         content = content.strip()
-
         emaill = request.form['content']
-        response = requests.get(f'https://2ip.ru/?area=ajaxHaveIBeenPwned&query={content}')
-        parsed = response.json()
-        content = parsed
+        response.append(requests.get(f'https://2ip.ru/?area=ajaxHaveIBeenPwned&query={content}'))
+        response.append(requests.get(f'https://api.snusbase.com/combo/antipublic/{content}'))
         if not content:
             flash('Content is required!')
         else:
-            messages.append({'title': emaill, 'content': content})
+            for x in response:
+                parsed = x.json()
+                content = parsed
+                messages.append({'title': emaill, 'content': content})
+            response.clear()
             return redirect(url_for('index'))
 
     return render_template('create.html')

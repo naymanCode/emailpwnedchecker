@@ -21,6 +21,8 @@ def index():
 def create():
     if request.method == 'POST':
         content = request.form['content']
+        content = content.strip()
+
         emaill = request.form['content']
         response = requests.get(f'https://2ip.ru/?area=ajaxHaveIBeenPwned&query={content}')
         parsed = response.json()
